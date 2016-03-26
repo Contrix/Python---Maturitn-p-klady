@@ -21,7 +21,7 @@ class App:
         frame.pack()
 
         self.dobre = 0
-        self.celkem = 0
+        self.celkem = -1
 
         title_label = Label(frame1, text="Operace")
         self.operace_entry = Entry(frame1, width=8)
@@ -32,7 +32,7 @@ class App:
         vysledek_label = Label(frame2, text="=")
         self.c_entry = Entry(frame2, width=4)
         kontorla_button = Button(frame3, text="Zkontrolovat", command=self.kontrola)
-        self.kontrola_label = Label(frame3, text="asasd")
+        self.kontrola_label = Label(frame3, text="0/0")
 
         title_label.pack(side=LEFT)
         self.operace_entry.pack(side=LEFT)
@@ -57,7 +57,8 @@ class App:
         self.akce = operace[random.randint(0, len(operace)-1)]
         self.operace_entry.delete(0, END)
         self.operace_entry.insert(0, operace)
-
+        self.a_entry.config(state=NORMAL)
+        self.b_entry.config(state=NORMAL)
         self.a_entry.delete(0, END)
         self.b_entry.delete(0, END)
         self.c_entry.delete(0, END)
@@ -88,23 +89,28 @@ class App:
                 if a % b == 0:
                     self.a_entry.insert(0, a)
                     break
+        self.a_entry.config(state=DISABLED)
+        self.b_entry.config(state=DISABLED)
 
     def kontrola(self):
         if len(self.c_entry.get()) != 0:
-            if self.akce == 0:
-                if int(self.a_entry.get()) + int(self.b_entry.get()) == int(self.c_entry.get()):
-                    self.dobre += 1
-            elif self.akce == 1:
-                if int(self.a_entry.get()) - int(self.b_entry.get()) == int(self.c_entry.get()):
-                    self.dobre += 1
-            elif self.akce == 2:
-                if int(self.a_entry.get()) * int(self.b_entry.get()) == int(self.c_entry.get()):
-                    self.dobre += 1
-            elif self.akce == 3:
-                if int(self.a_entry.get()) / int(self.b_entry.get()) == int(self.c_entry.get()):
-                    self.dobre += 1
-            self.novy_priklad()
-            self.kontrola_label.config(text=(self.dobre, "/", self.celkem))
+            try:
+                if self.akce == 0:
+                    if int(self.a_entry.get()) + int(self.b_entry.get()) == int(self.c_entry.get()):
+                        self.dobre += 1
+                elif self.akce == 1:
+                    if int(self.a_entry.get()) - int(self.b_entry.get()) == int(self.c_entry.get()):
+                        self.dobre += 1
+                elif self.akce == 2:
+                    if int(self.a_entry.get()) * int(self.b_entry.get()) == int(self.c_entry.get()):
+                        self.dobre += 1
+                elif self.akce == 3:
+                    if int(self.a_entry.get()) / int(self.b_entry.get()) == int(self.c_entry.get()):
+                        self.dobre += 1
+                self.novy_priklad()
+                self.kontrola_label.config(text=(self.dobre, "/", self.celkem))
+            except ValueError:
+                pass
 
 if __name__ == "__main__":
     root = Tk()
